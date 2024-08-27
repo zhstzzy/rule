@@ -1,7 +1,0 @@
-﻿IP地址,端口,回源端口,TLS,数据中心,地区,城市,TCP延迟(ms),速度(MB/s)
-164.152.26.70,2052,443,true,ORD,North America,Chicago,277,1.81
-181.36.229.212,2052,0,false,SDQ,North America,Santo Domingo,462,1.16
-183.232.159.226,2052,0,false,HKG,Asia Pacific,Hong Kong,40,0.40
-120.220.19.109,2052,2052,false,SIN,Asia Pacific,Singapore,31,0.31
-45.60.186.91,2052,0,false,SEA,North America,Seattle,277,0.25
-158.179.164.17,2052,0,false,ICN,Asia Pacific,Seoul,114,0.14
