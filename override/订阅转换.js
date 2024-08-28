@@ -251,6 +251,7 @@ const rules = [
   "RULE-SET,lancidr,DIRECT,no-resolve",
   "RULE-SET,cn_domain,DIRECT",
 
+  "RULE-SET,github,Proxy",
   "RULE-SET,microsoft,Microsoft",
   "RULE-SET,copilot,AIGC",
   "RULE-SET,bard,AIGC",
@@ -263,7 +264,6 @@ const rules = [
   "RULE-SET,tld-not-cn,Proxy",
   "RULE-SET,telegramcidr,Proxy,no-resolve",
 
-  "RULE-SET,github,Proxy",
   "RULE-SET,telegram,Proxy",
 
   // 其他规则
@@ -333,43 +333,10 @@ function main(config) {
       icon: "https://mirror.ghproxy.com/https://raw.githubusercontent.com/Orz-3/mini/master/Color/OpenAI.png",
       name: "AIGC",
       type: "select",
-      proxies: ["Proxy", "SG AUTO", "JP AUTO", "US AUTO"],
-    },
-    {
-      ...groupBaseOption,
-      icon: "https://mirror.ghproxy.com/https://raw.githubusercontent.com/Orz-3/mini/master/Color/HK.png",
       "include-all": true,
       "exclude-filter": excludeInfo,
-      filter: "(?i)香港|Hong Kong|HK|🇭🇰",
-      name: "HK AUTO",
-      type: "url-test",
-    },
-    {
-      ...groupBaseOption,
-      icon: "https://mirror.ghproxy.com/https://raw.githubusercontent.com/Orz-3/mini/master/Color/SG.png",
-      "include-all": true,
-      "exclude-filter": excludeInfo,
-      filter: "(?i)新加坡|Singapore|🇸🇬",
-      name: "SG AUTO",
-      type: "url-test",
-    },
-    {
-      ...groupBaseOption,
-      icon: "https://mirror.ghproxy.com/https://raw.githubusercontent.com/Orz-3/mini/master/Color/JP.png",
-      "include-all": true,
-      "exclude-filter": excludeInfo,
-      filter: "(?i)日本|Japan|🇯🇵",
-      name: "JP AUTO",
-      type: "url-test",
-    },
-    {
-      ...groupBaseOption,
-      icon: "https://mirror.ghproxy.com/https://raw.githubusercontent.com/Orz-3/mini/master/Color/US.png",
-      "include-all": true,
-      "exclude-filter": excludeInfo,
-      filter: "(?i)美国|USA|🇺🇸",
-      name: "US AUTO",
-      type: "url-test",
+      filter:
+        "(?i)香港|Hong Kong|HK|🇭🇰|新加坡|Singapore|🇸🇬|日本|Japan|🇯🇵|美国|USA|🇺🇸",
     },
     {
       ...groupBaseOption,
