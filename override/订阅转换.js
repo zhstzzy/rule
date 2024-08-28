@@ -324,7 +324,7 @@ function main(config) {
       ...groupBaseOption,
       name: "Microsoft",
       type: "select",
-      proxies: ["DIRECT", "Proxy", "HK AUTO", "SG AUTO", "JP AUTO", "US AUTO"],
+      proxies: ["DIRECT", "Proxy"],
       "include-all": false,
       icon: "https://mirror.ghproxy.com/https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Microsoft.png",
     },
