@@ -388,11 +388,6 @@ function main(config) {
     },
   ];
 
-  // config["proxies"].forEach((item) => {
-  //   config["proxy-groups"][0]["proxies"].push(item["name"]);
-  //   // config["proxy-groups"][1]["proxies"].push(item["name"]);
-  // });
-
   // 覆盖原配置中的规则
   config["rule-providers"] = ruleProviders;
   config["rules"] = rules;
