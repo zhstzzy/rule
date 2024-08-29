@@ -1,0 +1,23 @@
+﻿IP地址,端口,回源端口,TLS,数据中心,地区,城市,TCP延迟(ms),速度(MB/s)
+206.217.131.12,21656,443,true,ORD,North America,Chicago,399,1.91
+3.23.238.192,80,0,false,ORD,North America,Chicago,236,1.27
+164.152.26.70,2086,0,true,ORD,North America,Chicago,225,1.21
+23.94.136.126,8080,443,true,ORD,North America,Chicago,393,1.11
+3.147.61.205,443,443,true,ORD,North America,Chicago,246,1.07
+20.184.101.98,443,0,true,ORD,North America,Chicago,209,0.79
+3.13.196.41,443,0,true,ORD,North America,Chicago,212,0.72
+164.152.26.70,2052,0,true,ORD,North America,Chicago,229,0.62
+198.46.215.183,50964,0,true,ORD,North America,Chicago,392,0.60
+172.245.68.220,17524,0,true,ORD,North America,Chicago,393,0.54
+34.41.252.92,443,0,true,ORD,North America,Chicago,393,0.51
+198.144.183.24,443,0,true,ORD,North America,Chicago,393,0.48
+18.191.65.24,443,443,true,ORD,North America,Chicago,222,0.47
+18.190.127.150,443,0,true,ORD,North America,Chicago,250,0.43
+3.133.134.62,443,0,true,ORD,North America,Chicago,220,0.41
+35.222.222.227,443,0,true,ORD,North America,Chicago,392,0.39
+3.141.41.111,443,443,true,ORD,North America,Chicago,250,0.37
+198.46.159.248,36804,0,true,ORD,North America,Chicago,393,0.36
+18.227.81.120,443,443,true,ORD,North America,Chicago,212,0.33
+3.144.38.252,443,0,true,ORD,North America,Chicago,225,0.31
+34.123.83.237,443,443,true,ORD,North America,Chicago,392,0.27
+34.45.111.87,443,0,true,ORD,North America,Chicago,394,0.27
