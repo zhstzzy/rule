@@ -1,0 +1,37 @@
+﻿IP地址,端口,回源端口,TLS,数据中心,地区,城市,TCP延迟(ms),速度(MB/s)
+35.200.202.118,80,80,false,BOM,Asia Pacific,Mumbai,224,2.51
+35.247.124.181,80,80,false,SEA,North America,Seattle,196,2.21
+34.102.111.127,443,0,true,LAX,North America,Los Angeles,167,2.06
+34.102.111.127,80,0,false,LAX,North America,Los Angeles,172,1.80
+35.222.222.227,443,443,true,ORD,North America,Chicago,196,1.76
+34.22.142.117,443,0,true,CDG,Europe,Paris,201,1.31
+35.228.132.81,2053,0,true,ARN,Europe,Stockholm,228,0.92
+34.93.79.152,80,0,false,BOM,Asia Pacific,Mumbai,372,0.85
+34.111.135.19,80,80,false,LAX,North America,Los Angeles,220,0.76
+34.94.33.105,443,443,true,LAX,North America,Los Angeles,195,0.68
+34.66.72.229,443,443,true,ORD,North America,Chicago,230,0.63
+34.160.118.77,80,80,false,LAX,North America,Los Angeles,212,0.60
+35.228.132.81,8443,443,true,ARN,Europe,Stockholm,217,0.59
+34.94.98.138,443,0,true,FRA,Europe,Los Angeles,191,0.58
+34.82.76.253,443,0,true,SEA,North America,Seattle,171,0.57
+35.226.211.129,443,443,true,ORD,North America,Chicago,206,0.55
+34.175.202.195,443,0,true,MAD,Europe,Madrid,238,0.50
+35.246.168.59,2053,0,true,FRA,Europe,Frankfurt,194,0.50
+34.106.175.80,8443,0,true,SLC,North America,Salt Lake City,183,0.49
+34.22.190.30,443,0,true,CDG,Europe,Paris,205,0.48
+34.88.63.160,443,443,true,FRA,Europe,Frankfurt,217,0.46
+35.244.133.3,80,0,false,LAX,North America,Los Angeles,171,0.44
+34.36.183.121,80,0,false,LAX,North America,Los Angeles,188,0.41
+35.197.239.137,443,0,true,LHR,Europe,London,207,0.29
+35.230.79.26,443,0,true,SEA,North America,Seattle,206,0.26
+34.142.31.109,443,0,true,LHR,Europe,London,204,0.21
+34.117.254.68,80,0,false,LAX,North America,Los Angeles,194,0.18
+35.228.168.221,443,443,true,ARN,Europe,Stockholm,223,0.17
+34.105.189.25,443,0,true,LHR,Europe,London,204,0.15
+34.96.172.212,80,80,false,HKG,Asia Pacific,Hong Kong,183,0.01
+34.124.151.234,80,80,false,SIN,Asia Pacific,Singapore,160,0.01
+34.124.151.234,443,443,true,SIN,Asia Pacific,Singapore,160,0.01
+34.96.172.212,443,443,true,HKG,Asia Pacific,Hong Kong,197,0.01
+34.45.111.87,443,443,true,ORD,North America,Chicago,225,0.00
+34.93.226.165,80,0,false,BOM,Asia Pacific,Mumbai,371,0.00
+35.200.202.118,443,443,true,BOM,Asia Pacific,Mumbai,232,0.00

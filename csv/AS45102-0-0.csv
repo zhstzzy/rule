@@ -1,0 +1,29 @@
+﻿IP地址,端口,回源端口,TLS,数据中心,地区,城市,TCP延迟(ms),速度(MB/s)
+47.76.245.164,80,443,true,SIN,Asia Pacific,Singapore,50,2.78
+47.76.166.41,443,443,true,HKG,Asia Pacific,Hong Kong,50,2.64
+47.236.197.190,8443,443,true,SIN,Asia Pacific,Singapore,67,1.88
+8.222.155.206,443,443,true,SIN,Asia Pacific,Singapore,76,1.66
+47.238.138.232,80,443,true,CGK,Asia Pacific,Jakarta,40,1.47
+47.83.13.99,443,443,true,HKG,Asia Pacific,Hong Kong,46,1.32
+47.76.243.157,80,443,true,SIN,Asia Pacific,Singapore,39,1.21
+8.209.119.190,80,80,false,SJC,North America,San Jose,263,1.16
+47.76.254.36,80,0,true,SIN,Asia Pacific,Singapore,50,0.90
+8.222.233.183,443,443,true,SIN,Asia Pacific,Singapore,74,0.87
+47.238.52.160,80,0,true,SIN,Asia Pacific,Singapore,49,0.69
+47.236.181.185,8443,0,true,SIN,Asia Pacific,Singapore,83,0.41
+47.238.44.224,80,443,true,SIN,Asia Pacific,Singapore,51,0.41
+47.236.75.163,8443,443,true,SIN,Asia Pacific,Singapore,77,0.36
+47.245.142.16,8443,0,true,FRA,Europe,Frankfurt,282,0.36
+47.251.54.234,8443,443,true,SJC,North America,San Jose,187,0.35
+8.211.54.130,443,443,true,FRA,Europe,Frankfurt,256,0.33
+47.238.36.145,80,0,true,SIN,Asia Pacific,Singapore,53,0.32
+8.219.77.141,80,0,false,SJC,North America,San Jose,81,0.27
+47.57.233.126,80,0,false,SJC,North America,San Jose,43,0.27
+8.208.11.119,8443,443,true,LHR,Europe,London,266,0.23
+47.238.198.21,443,0,true,HKG,Asia Pacific,Hong Kong,47,0.22
+47.89.149.186,8443,0,true,IAD,North America,Ashburn,330,0.20
+8.211.2.2,8443,443,true,FRA,Europe,Frankfurt,257,0.19
+47.76.62.62,8443,443,true,HKG,Asia Pacific,Hong Kong,47,0.03
+47.89.156.48,80,0,false,IAD,North America,Ashburn,278,0.01
+47.90.141.204,443,0,true,LAX,North America,Los Angeles,270,0.00
+47.236.113.184,443,0,true,SIN,Asia Pacific,Singapore,74,0.00
