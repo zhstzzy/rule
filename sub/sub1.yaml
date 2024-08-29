@@ -121,6 +121,7 @@ proxy-groups:
       name: "AIGC",
       type: "select",
       use: [providers1],
+      proxies: [Proxy]
       exclude-filter: "(?i)Traffic|Expire|Premium|频道|订阅|ISP|到期|重置|3K大佬下血本|导航站",
       filter: "(?i)香港|Hong Kong|HK|🇭🇰|新加坡|Singapore|🇸🇬|日本|Japan|🇯🇵|美国|USA|🇺🇸",
     }

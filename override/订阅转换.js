@@ -327,6 +327,7 @@ function main(config) {
       type: "select",
       "include-all": true,
       "exclude-filter": excludeInfo,
+      proxies: ["Proxy"],
       filter:
         "(?i)香港|Hong Kong|HK|🇭🇰|新加坡|Singapore|🇸🇬|日本|Japan|🇯🇵|美国|USA|🇺🇸",
     },
@@ -349,8 +350,8 @@ function main(config) {
 
   // 覆盖原配置中的规则
   config["rule-providers"] = ruleProviders;
-  config["rules"] = rules;
 
+  config["rules"] = rules;
   // 覆盖原配置中DNS配置
   config["dns"] = dnsConfig;
   // 域名嗅探
