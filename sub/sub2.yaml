@@ -17,8 +17,8 @@ mixed-port: 7890
 unified-delay: false
 tcp-concurrent: true
 external-controller: 0.0.0.0:9090
-external-ui: ui
-external-ui-url: ""
+external-ui: "https://github.com/MetaCubeX/metacubexd/archive/refs/heads/gh-pages.zip"
+external-ui-url: "sar9862"
 find-process-mode: strict
 global-client-fingerprint: chrome
 
