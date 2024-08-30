@@ -1,4 +1,4 @@
-rules:
++rules:
   - "DOMAIN-SUFFIX,828820.xyz,DIRECT"
   - "DOMAIN-SUFFIX,zhstzzy.tk,DIRECT"
   - "DOMAIN-SUFFIX,baidu.com,DIRECT"

@@ -240,6 +240,10 @@ const ruleProviders = {
 };
 // 规则
 const rules = [
+  "DOMAIN-SUFFIX,828820.xyz,DIRECT",
+  "DOMAIN-SUFFIX,zhstzzy.tk,DIRECT",
+  "DOMAIN-SUFFIX,baidu.com,DIRECT",
+  "DOMAIN-SUFFIX,tencent.com,DIRECT",
   //规则集
   "RULE-SET,reject,Block",
   "RULE-SET,ads,Block",
@@ -345,6 +349,16 @@ function main(config) {
       proxies: ["Proxy", "Auto Select", "DIRECT"],
       "include-all": false,
       icon: "https://mirror.ghproxy.com/https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Final.png",
+    },
+    {
+
+      ...groupBaseOption,
+      name: "GLOBAL",
+      type: "select",
+      proxies: ["Auto Select", "DIRECT", ...proxyInfo],
+      "include-all": false,
+      "exclude-filter": excludeInfo,
+      icon: "https://mirror.ghproxy.com/https://raw.githubusercontent.com/Orz-3/mini/master/Color/Global.png",
     },
   ];
 
