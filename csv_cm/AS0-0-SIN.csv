@@ -1,22 +1,14 @@
 ﻿IP地址,端口,回源端口,TLS,数据中心,地区,城市,TCP延迟(ms),速度(MB/s)
-38.147.188.26,8003,0,true,SIN,Asia Pacific,Singapore,55,10.10
-13.212.91.157,443,0,true,SIN,Asia Pacific,Singapore,95,8.09
-120.220.19.103,2082,2082,false,SIN,Asia Pacific,Singapore,37,6.46
-120.220.19.109,2052,2052,false,SIN,Asia Pacific,Singapore,37,6.13
-120.220.19.109,2082,0,false,SIN,Asia Pacific,Singapore,43,5.13
-120.220.19.103,2052,0,false,SIN,Asia Pacific,Singapore,38,4.60
-3.1.116.161,2053,0,true,SIN,Asia Pacific,Singapore,87,4.04
-140.245.41.48,443,0,true,SIN,Asia Pacific,Singapore,86,3.22
-154.17.225.138,59430,0,true,SIN,Asia Pacific,Singapore,146,3.12
-104.234.233.57,35911,0,true,SIN,Asia Pacific,Singapore,248,2.68
-217.142.187.83,8443,0,true,SIN,Asia Pacific,Singapore,91,2.66
-13.228.155.72,443,0,true,SIN,Asia Pacific,Singapore,76,2.19
-47.236.113.184,443,0,true,SIN,Asia Pacific,Singapore,105,1.54
-138.2.85.23,8080,0,true,SIN,Asia Pacific,Singapore,92,1.41
-139.84.162.197,443,0,true,SIN,Asia Pacific,Singapore,333,0.55
-8.223.2.222,80,0,false,SIN,Asia Pacific,Singapore,48,0.49
-103.75.188.126,443,0,true,SIN,Asia Pacific,Singapore,340,0.41
-43.156.253.94,443,0,true,SIN,Asia Pacific,Singapore,99,0.19
-103.180.193.56,443,0,true,SIN,Asia Pacific,Singapore,235,0.10
-172.188.90.14,8080,0,false,SIN,Asia Pacific,Singapore,94,0.04
-52.163.67.59,80,0,false,SIN,Asia Pacific,Singapore,108,0.00
+45.159.51.121,32199,0,true,SIN,Asia Pacific,Singapore,70,8.75
+52.163.67.59,80,0,false,SIN,Asia Pacific,Singapore,107,8.57
+38.147.188.26,8003,0,true,SIN,Asia Pacific,Singapore,47,3.85
+217.142.187.83,8443,0,true,SIN,Asia Pacific,Singapore,84,3.31
+47.236.113.184,443,0,true,SIN,Asia Pacific,Singapore,111,2.19
+43.156.253.94,443,0,true,SIN,Asia Pacific,Singapore,240,1.29
+172.93.188.157,443,0,true,HKG,Asia Pacific,Hong Kong,47,1.09
+8.223.3.253,80,0,false,SIN,Asia Pacific,Singapore,44,0.28
+47.236.181.185,8443,0,true,SIN,Asia Pacific,Singapore,107,0.22
+103.180.193.56,443,0,true,SIN,Asia Pacific,Singapore,197,0.02
+172.188.90.14,8080,0,false,SIN,Asia Pacific,Singapore,98,0.00
+154.17.225.138,59430,0,true,SIN,Asia Pacific,Singapore,147,0.00
+140.245.41.48,443,0,true,SIN,Asia Pacific,Singapore,232,0.00
