@@ -4,9 +4,13 @@ const domesticNameservers = [
   "https://dns.alidns.com/dns-query",
 ];
 // 国外DNS服务器
-const foreignNameservers = ["tls://8.8.4.4", "https://1.0.0.1/dns-query"];
+const foreignNameservers = [
+  "https://dns.cloudflare.com/dns-query",
+  "https://dns.google/dns-query",
+];
 
 const fallbackDomain = ["+.google.com", "+.facebook.com", "+.youtube.com"];
+
 const fakeIpFilter = [
   "+.lan",
   "+.local",
@@ -16,6 +20,7 @@ const fakeIpFilter = [
   "localhost.sec.qq.com",
   "localhost.work.weixin.qq.com",
 ];
+
 const dnsConfig = {
   enable: true,
   ipv6: true,
@@ -27,10 +32,13 @@ const dnsConfig = {
   nameserver: ["https://1.1.1.1/dns-query", "https://8.8.8.8/dns-query"],
   "proxy-server-nameserver": ["https://doh.pub/dns-query"],
   "nameserver-policy": {
-    "rule-set:private,cn_domain,direct": "system",
-    "geosite:cn": domesticNameservers,
-    "geosite:geolocation-!cn": foreignNameservers,
-    "rule-set:gfw,proxy,telegram,tld-not-cn": foreignNameservers,
+    "rule-set:private,cn_domain,direct,mydomain": [
+      // "system",
+      ...domesticNameservers,
+    ],
+    "geosite:cn": [...domesticNameservers],
+    "geosite:geolocation-!cn": [...foreignNameservers],
+    "rule-set:gfw,proxy,telegram,tld-not-cn": [...foreignNameservers],
   },
   fallback: ["tls://8.8.4.4", "tls://1.1.1.1"],
   "fallback-filter": {
@@ -77,6 +85,13 @@ const ruleProviderMrs = {
 };
 // 规则集配置
 const ruleProviders = {
+  mydomain: {
+    ...ruleProviderYaml,
+    behavior: "domain",
+    url: "https://gh.828820.xyz/zhstzzy/WorkerVless2sub/main/privateDomin.yaml?token=sar9862",
+    path: "./ruleset/mydomain.yaml",
+  },
+
   reject: {
     ...ruleProviderText,
     behavior: "domain",
@@ -95,13 +110,6 @@ const ruleProviders = {
     url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/applications.txt",
     path: "./ruleset/applications.yaml",
   },
-  prevent_dns_leak: {
-    ...ruleProviderText,
-    behavior: "domain",
-    url: "https://mirror.ghproxy.com/https://raw.githubusercontent.com/xishang0128/rules/main/clash%20or%20stash/prevent_dns_leak/prevent_dns_leak_domain.list",
-    path: "./ruleset/prevent_dns_leak_domain.yaml",
-  },
-
   // MetaCubeX
   "tld-not-cn": {
     ...ruleProviderMrs,
@@ -220,15 +228,11 @@ const ruleProviders = {
 };
 // 规则
 const rules = [
-  "DOMAIN-SUFFIX,828820.xyz,DIRECT",
-  "DOMAIN-SUFFIX,linux.do,DIRECT",
-  "DOMAIN-SUFFIX,zhstzzy.tk,DIRECT",
-  "DOMAIN-SUFFIX,baidu.com,DIRECT",
-  "DOMAIN-SUFFIX,tencent.com,DIRECT",
   //规则集
   "RULE-SET,reject,Block",
   "RULE-SET,ads,Block",
 
+  "RULE-SET,mydomain,DIRECT",
   "RULE-SET,applications,DIRECT",
   "RULE-SET,private,DIRECT",
   "RULE-SET,direct,DIRECT",
