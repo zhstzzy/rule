@@ -1,54 +1,44 @@
 // 国内DNS服务器
 const domesticNameservers = [
-  "tls://1.12.12.12:853",
-  "tls://223.6.6.6:853",
   "https://doh.pub/dns-query",
   "https://dns.alidns.com/dns-query",
 ];
 // 国外DNS服务器
-const foreignNameservers = [
-  "tls://1.0.0.1:853",
-  "tls://8.8.4.4:853",
-  "https://cloudflare-dns.com/dns-query",
-  "https://dns.google/dns-query",
-  "https://doh.dns.sb/dns-query",
-];
+const foreignNameservers = ["tls://8.8.4.4", "https://1.0.0.1/dns-query"];
 
-const ProxyNameserver = [
-  "quic://223.5.5.5",
-  "quic://223.6.6.6",
-  "https://cloudflare-dns.com/dns-query",
-  "https://dns.google/dns-query",
-  "https://1.12.12.12/dns-query",
-  "https://120.53.53.53/dns-query",
+const fallbackDomain = ["+.google.com", "+.facebook.com", "+.youtube.com"];
+const fakeIpFilter = [
+  "+.lan",
+  "+.local",
+  "+.msftncsi.com",
+  "+.msftconnecttest.com",
+  "localhost.ptlogin2.qq.com",
+  "localhost.sec.qq.com",
+  "localhost.work.weixin.qq.com",
 ];
-
 const dnsConfig = {
   enable: true,
   ipv6: true,
   listen: "0.0.0.0:1053",
   "fake-ip-range": "198.18.0.1/16",
   "enhanced-mode": "fake-ip",
-  "fake-ip-filter": [
-    "+.lan",
-    "+.local",
-    "+.msftncsi.com",
-    "+.msftconnecttest.com",
-    "localhost.ptlogin2.qq.com",
-    "localhost.sec.qq.com",
-    "localhost.work.weixin.qq.com",
-  ],
+  "fake-ip-filter": fakeIpFilter,
   "default-nameserver": ["223.5.5.5", "119.29.29.29", "system"],
-  nameserver: ["223.5.5.5", "119.29.29.29"],
-  "proxy-server-nameserver": [...domesticNameservers, ...foreignNameservers],
+  nameserver: ["https://1.1.1.1/dns-query", "https://8.8.8.8/dns-query"],
+  "proxy-server-nameserver": ["https://doh.pub/dns-query"],
   "nameserver-policy": {
     "rule-set:private,cn_domain,direct": "system",
-    "rule-set:gfw,proxy,telegram,tld-not-cn": [...ProxyNameserver],
+    "geosite:cn": domesticNameservers,
+    "geosite:geolocation-!cn": foreignNameservers,
+    "rule-set:gfw,proxy,telegram,tld-not-cn": foreignNameservers,
   },
-  fallback: [...foreignNameservers],
+  fallback: ["tls://8.8.4.4", "tls://1.1.1.1"],
   "fallback-filter": {
     geoip: true,
-    ipcidr: ["240.0.0.0/4", "0.0.0.0/32"],
+    "geoip-code": "CN",
+    geosite: ["gfw"],
+    ipcidr: ["240.0.0.0/4"],
+    domain: fallbackDomain,
   },
 };
 
@@ -91,24 +81,25 @@ const ruleProviders = {
     ...ruleProviderText,
     behavior: "domain",
     url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/reject.txt",
-    // path: "./ruleset/reject.yaml",
+    path: "./ruleset/reject.yaml",
   },
   direct: {
     ...ruleProviderText,
     behavior: "domain",
     url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/direct.txt",
-    // path: "./ruleset/direct.yaml",
+    path: "./ruleset/direct.yaml",
   },
   applications: {
     ...ruleProviderText,
     behavior: "domain",
     url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/applications.txt",
-    // path: "./ruleset/applications.yaml",
+    path: "./ruleset/applications.yaml",
   },
   prevent_dns_leak: {
     ...ruleProviderText,
     behavior: "domain",
     url: "https://mirror.ghproxy.com/https://raw.githubusercontent.com/xishang0128/rules/main/clash%20or%20stash/prevent_dns_leak/prevent_dns_leak_domain.list",
+    path: "./ruleset/prevent_dns_leak_domain.yaml",
   },
 
   // MetaCubeX
@@ -116,110 +107,115 @@ const ruleProviders = {
     ...ruleProviderMrs,
     behavior: "domain",
     url: "https://mirror.ghproxy.com/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/tld-!cn.mrs",
-    // path: "./ruleset/tld-not-cn.yaml",
+    path: "./ruleset/tld-not-cn",
   },
   "geolocation-!cn": {
     ...ruleProviderMrs,
     behavior: "domain",
     url: "https://mirror.ghproxy.com/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/geolocation-!cn.mrs",
-    // path: "./ruleset/geolocation-!cn.yaml",
+    path: "./ruleset/geolocation-!cn",
   },
   gfw: {
     ...ruleProviderMrs,
     behavior: "domain",
     url: "https://mirror.ghproxy.com/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/gfw.mrs",
-    // path: "./ruleset/gfw.yaml",
+    path: "./ruleset/gfw",
   },
   proxy: {
     ...ruleProviderMrs,
     behavior: "domain",
     url: "https://mirror.ghproxy.com/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo-lite/geosite/proxy.mrs",
-    // path: "./ruleset/proxy.yaml",
+    path: "./ruleset/proxy",
   },
   private: {
     ...ruleProviderMrs,
     behavior: "domain",
     url: "https://mirror.ghproxy.com/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo-lite/geosite/private.mrs",
-    // path: "./ruleset/private.yaml",
+    path: "./ruleset/private",
   },
   telegramcidr: {
     ...ruleProviderMrs,
     behavior: "ipcidr",
     url: "https://mirror.ghproxy.com/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/telegram.mrs",
-    // path: "./ruleset/telegramcidr.yaml",
+    path: "./ruleset/telegramcidr",
   },
   lancidr: {
     ...ruleProviderMrs,
     behavior: "ipcidr",
     url: "https://mirror.ghproxy.com/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/private.mrs",
-    // path: "./ruleset/lancidr.yaml",
+    path: "./ruleset/lancidr",
   },
   cncidr: {
     ...ruleProviderMrs,
     behavior: "ipcidr",
     url: "https://mirror.ghproxy.com/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/cn.mrs",
-    // path: "./ruleset/cncidr.yaml",
+    path: "./ruleset/cncidr",
   },
   youtube: {
     ...ruleProviderMrs,
     behavior: "domain",
     url: "https://mirror.ghproxy.com/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/youtube.mrs",
-    // path: "./ruleset/youtube.yaml",
+    path: "./ruleset/youtube",
   },
   cn_domain: {
     ...ruleProviderMrs,
     behavior: "domain",
     url: "https://mirror.ghproxy.com/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/cn.mrs",
-    // path: "./ruleset/cn_domain.yaml",
+    path: "./ruleset/cn_domain",
   },
   telegram: {
     ...ruleProviderMrs,
     behavior: "domain",
     url: "https://mirror.ghproxy.com/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/telegram.mrs",
-    // path: "./ruleset/telegram.yaml",
+    path: "./ruleset/telegram",
   },
   github: {
     ...ruleProviderMrs,
     behavior: "domain",
     url: "https://mirror.ghproxy.com/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/github.mrs",
-    // path: "./ruleset/github.yaml",
+    path: "./ruleset/github",
   },
   microsoft: {
     ...ruleProviderMrs,
     behavior: "domain",
     url: "https://mirror.ghproxy.com/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/microsoft.mrs",
-    // path: "./ruleset/microsoft.yaml",
+    path: "./ruleset/microsoft",
   },
   ads: {
     ...ruleProviderMrs,
     behavior: "domain",
     url: "https://mirror.ghproxy.com/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/category-ads-all.mrs",
-    // path: "./ruleset/category-ads-all.yaml",
+    path: "./ruleset/category-ads-all",
   },
   copilot: {
     ...ruleProviderYaml,
     behavior: "classical",
     url: "https://mirror.ghproxy.com/https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Copilot/Copilot.yaml",
+    path: "./ruleset/Copilot.yaml",
   },
   claude: {
     ...ruleProviderYaml,
     behavior: "classical",
     url: "https://mirror.ghproxy.com/https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Claude/Claude.yaml",
+    path: "./ruleset/Claude.yaml",
   },
   bard: {
     ...ruleProviderYaml,
     behavior: "classical",
     url: "https://mirror.ghproxy.com/https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/BardAI/BardAI.yaml",
+    path: "./ruleset/BardAI.yaml",
   },
   openai: {
     ...ruleProviderYaml,
     behavior: "classical",
     url: "https://mirror.ghproxy.com/https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/OpenAI/OpenAI.yaml",
+    path: "./ruleset/OpenAI.yaml",
   },
   steam: {
     ...ruleProviderYaml,
     behavior: "classical",
     url: "https://mirror.ghproxy.com/https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Steam/Steam.yaml",
+    path: "./ruleset/Steam.yaml",
   },
 };
 // 规则
