@@ -37,7 +37,7 @@ const dnsConfig = {
       ...domesticNameservers,
     ],
     "geosite:cn": [...domesticNameservers],
-    "geosite:geolocation-!cn": [...foreignNameservers],
+    "geosite:geolocation-!cn": [...domesticNameservers,...foreignNameservers],
     "rule-set:gfw,proxy,telegram,tld-not-cn": [...foreignNameservers],
   },
   fallback: ["tls://8.8.4.4", "tls://1.1.1.1"],
