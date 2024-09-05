@@ -1,0 +1,2 @@
+﻿IP地址,端口,回源端口,TLS,数据中心,地区,城市,TCP延迟(ms),速度(MB/s)
+111.247.40.244,443,0,true,KHH,Asia Pacific,Kaohsiung City,65,10.94
