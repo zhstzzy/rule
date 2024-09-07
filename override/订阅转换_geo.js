@@ -1,19 +1,19 @@
 const proxyName = "Proxy";
 const microsoftName = "Microsoft";
 const AIName = "AIGC";
+const FallbackName = "Fallback";
 
 // 国内DNS服务器
 const domesticNameservers = [
   "https://doh.pub/dns-query",
   "https://dns.alidns.com/dns-query",
 ];
+
 // 国外DNS服务器
 const foreignNameservers = [
   "https://dns.cloudflare.com/dns-query",
   "https://dns.google/dns-query",
 ];
-
-const fallbackDomain = ["+.google.com", "+.facebook.com", "+.youtube.com"];
 
 const fakeIpFilter = [
   "+.lan",
@@ -32,23 +32,12 @@ const dnsConfig = {
   "fake-ip-range": "198.18.0.1/16",
   "enhanced-mode": "fake-ip",
   "fake-ip-filter": fakeIpFilter,
-  "default-nameserver": ["223.5.5.5", "119.29.29.29", "system"],
-  nameserver: ["https://1.1.1.1/dns-query", "https://8.8.8.8/dns-query"],
-  "proxy-server-nameserver": ["https://doh.pub/dns-query"],
+  "default-nameserver": ["119.29.29.29", "system"],
+  nameserver: foreignNameservers,
+  "proxy-server-nameserver": domesticNameservers,
   "nameserver-policy": {
-    "rule-set:reject": "rcode://success",
-    "geosite:category-ads-all": "rcode://success",
-    "rule-set:direct,mydomain": ["system", ...domesticNameservers],
-    "geosite:cn,private,geolocation-cn": ["system", ...domesticNameservers],
-    "geosite:geolocation-!cn,gfw": [...foreignNameservers],
-  },
-  fallback: ["tls://8.8.4.4", "tls://1.1.1.1"],
-  "fallback-filter": {
-    geoip: true,
-    "geoip-code": "CN",
-    geosite: ["gfw"],
-    ipcidr: ["240.0.0.0/4"],
-    domain: fallbackDomain,
+    "geosite:private": "system",
+    "geosite:cn": domesticNameservers,
   },
 };
 
@@ -163,7 +152,7 @@ const rules = [
   "GEOIP,JP," + proxyName,
   "GEOIP,LAN,DIRECT",
   "GEOIP,CN,DIRECT",
-  "MATCH,DIRECT",
+  "MATCH," + FallbackName,
 ];
 // 代理组通用配置
 const groupBaseOption = {
@@ -232,7 +221,7 @@ function main(config) {
     },
     {
       ...groupBaseOption,
-      name: "Fallback",
+      name: FallbackName,
       type: "select",
       proxies: [proxyName, "Auto Select", "DIRECT"],
       "include-all": false,
