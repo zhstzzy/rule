@@ -1,12 +1,15 @@
 ﻿IP地址,端口,回源端口,TLS,数据中心,地区,城市,TCP延迟(ms),速度(MB/s)
-223.222.126.171,12794,0,true,KIX,Asia Pacific,Osaka,193,5.53
-223.222.13.132,12744,0,true,NRT,Asia Pacific,Tokyo,120,3.74
-124.80.94.164,31276,0,true,KIX,Asia Pacific,Osaka,150,2.99
-223.222.13.132,21082,0,true,KIX,Asia Pacific,Osaka,169,1.46
-124.199.33.104,22672,0,true,NRT,Asia Pacific,Tokyo,143,1.42
-117.123.234.199,29708,0,true,NRT,Asia Pacific,Tokyo,118,1.11
-124.80.75.68,26658,0,true,NRT,Asia Pacific,Tokyo,135,0.80
-117.123.72.132,21979,0,true,NRT,Asia Pacific,Tokyo,139,0.57
-117.123.72.132,18229,0,true,NRT,Asia Pacific,Tokyo,139,0.02
-117.123.72.132,19374,0,true,NRT,Asia Pacific,Tokyo,129,0.00
-124.199.44.146,10419,0,true,NRT,Asia Pacific,Tokyo,320,0.00
+15.168.190.255,443,0,true,KIX,Asia Pacific,Osaka,58,7.91
+223.222.126.171,12794,0,true,NRT,Asia Pacific,Tokyo,163,5.63
+140.83.57.116,8443,0,false,KIX,Asia Pacific,Osaka,176,3.44
+117.123.234.199,29708,0,true,NRT,Asia Pacific,Tokyo,123,2.57
+20.52.104.187,443,0,true,KIX,Asia Pacific,Osaka,494,2.11
+223.222.13.132,12744,0,true,NRT,Asia Pacific,Tokyo,125,2.10
+117.123.234.199,17658,0,true,KIX,Asia Pacific,Osaka,155,1.97
+124.80.94.164,31276,0,true,KIX,Asia Pacific,Osaka,174,1.70
+124.80.94.164,16528,0,true,KIX,Asia Pacific,Osaka,174,1.26
+124.80.27.105,16070,0,true,NRT,Asia Pacific,Tokyo,143,1.23
+124.80.75.68,12654,0,true,NRT,Asia Pacific,Tokyo,412,0.00
+124.80.75.68,35810,0,true,NRT,Asia Pacific,Tokyo,407,0.00
+117.123.72.132,24016,0,true,KIX,Asia Pacific,Osaka,180,0.00
+124.80.75.68,25346,0,true,NRT,Asia Pacific,Tokyo,402,0.00
