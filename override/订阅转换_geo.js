@@ -1,15 +1,19 @@
+const proxyName = "Proxy";
+const microsoftName = "Microsoft";
+const AIName = "AIGC";
+const FallbackName = "Fallback";
+
 // 国内DNS服务器
 const domesticNameservers = [
   "https://doh.pub/dns-query",
   "https://dns.alidns.com/dns-query",
 ];
+
 // 国外DNS服务器
 const foreignNameservers = [
   "https://dns.cloudflare.com/dns-query",
   "https://dns.google/dns-query",
 ];
-
-const fallbackDomain = ["+.google.com", "+.facebook.com", "+.youtube.com"];
 
 const fakeIpFilter = [
   "+.lan",
@@ -28,25 +32,12 @@ const dnsConfig = {
   "fake-ip-range": "198.18.0.1/16",
   "enhanced-mode": "fake-ip",
   "fake-ip-filter": fakeIpFilter,
-  "default-nameserver": ["223.5.5.5", "119.29.29.29", "system"],
-  nameserver: ["https://1.1.1.1/dns-query", "https://8.8.8.8/dns-query"],
-  "proxy-server-nameserver": ["https://doh.pub/dns-query"],
+  "default-nameserver": ["119.29.29.29", "system"],
+  nameserver: foreignNameservers,
+  "proxy-server-nameserver": domesticNameservers,
   "nameserver-policy": {
-    "rule-set:private,cn_domain,direct,mydomain": [
-      // "system",
-      ...domesticNameservers,
-    ],
-    "geosite:cn": [...domesticNameservers],
-    "geosite:geolocation-!cn": [...domesticNameservers,...foreignNameservers],
-    "rule-set:gfw,proxy,telegram,tld-not-cn": [...foreignNameservers],
-  },
-  fallback: ["tls://8.8.4.4", "tls://1.1.1.1"],
-  "fallback-filter": {
-    geoip: true,
-    "geoip-code": "CN",
-    geosite: ["gfw"],
-    ipcidr: ["240.0.0.0/4"],
-    domain: fallbackDomain,
+    "geosite:private": "system",
+    "geosite:cn": domesticNameservers,
   },
 };
 
@@ -104,107 +95,6 @@ const ruleProviders = {
     url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/direct.txt",
     path: "./ruleset/direct.yaml",
   },
-  applications: {
-    ...ruleProviderText,
-    behavior: "domain",
-    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/applications.txt",
-    path: "./ruleset/applications.yaml",
-  },
-<<<<<<< HEAD
-  prevent_dns_leak: {
-    ...ruleProviderText,
-    behavior: "domain",
-    url: "https://mirror.ghproxy.com/https://raw.githubusercontent.com/xishang0128/rules/main/clash%20or%20stash/prevent_dns_leak/prevent_dns_leak_domain.list",
-    path: "./ruleset/prevent_dns_leak_domain.yaml",
-  },
-
-=======
->>>>>>> c9c878a09d7d564f4fa54da3a2002f904dcc0ebe
-  // MetaCubeX
-  "tld-not-cn": {
-    ...ruleProviderMrs,
-    behavior: "domain",
-    url: "https://mirror.ghproxy.com/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/tld-!cn.mrs",
-    path: "./ruleset/tld-not-cn",
-  },
-  "geolocation-!cn": {
-    ...ruleProviderMrs,
-    behavior: "domain",
-    url: "https://mirror.ghproxy.com/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/geolocation-!cn.mrs",
-    path: "./ruleset/geolocation-!cn",
-  },
-  gfw: {
-    ...ruleProviderMrs,
-    behavior: "domain",
-    url: "https://mirror.ghproxy.com/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/gfw.mrs",
-    path: "./ruleset/gfw",
-  },
-  proxy: {
-    ...ruleProviderMrs,
-    behavior: "domain",
-    url: "https://mirror.ghproxy.com/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo-lite/geosite/proxy.mrs",
-    path: "./ruleset/proxy",
-  },
-  private: {
-    ...ruleProviderMrs,
-    behavior: "domain",
-    url: "https://mirror.ghproxy.com/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo-lite/geosite/private.mrs",
-    path: "./ruleset/private",
-  },
-  telegramcidr: {
-    ...ruleProviderMrs,
-    behavior: "ipcidr",
-    url: "https://mirror.ghproxy.com/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/telegram.mrs",
-    path: "./ruleset/telegramcidr",
-  },
-  lancidr: {
-    ...ruleProviderMrs,
-    behavior: "ipcidr",
-    url: "https://mirror.ghproxy.com/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/private.mrs",
-    path: "./ruleset/lancidr",
-  },
-  cncidr: {
-    ...ruleProviderMrs,
-    behavior: "ipcidr",
-    url: "https://mirror.ghproxy.com/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/cn.mrs",
-    path: "./ruleset/cncidr",
-  },
-  youtube: {
-    ...ruleProviderMrs,
-    behavior: "domain",
-    url: "https://mirror.ghproxy.com/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/youtube.mrs",
-    path: "./ruleset/youtube",
-  },
-  cn_domain: {
-    ...ruleProviderMrs,
-    behavior: "domain",
-    url: "https://mirror.ghproxy.com/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/cn.mrs",
-    path: "./ruleset/cn_domain",
-  },
-  telegram: {
-    ...ruleProviderMrs,
-    behavior: "domain",
-    url: "https://mirror.ghproxy.com/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/telegram.mrs",
-    path: "./ruleset/telegram",
-  },
-  github: {
-    ...ruleProviderMrs,
-    behavior: "domain",
-    url: "https://mirror.ghproxy.com/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/github.mrs",
-    path: "./ruleset/github",
-  },
-  microsoft: {
-    ...ruleProviderMrs,
-    behavior: "domain",
-    url: "https://mirror.ghproxy.com/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/microsoft.mrs",
-    path: "./ruleset/microsoft",
-  },
-  ads: {
-    ...ruleProviderMrs,
-    behavior: "domain",
-    url: "https://mirror.ghproxy.com/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/category-ads-all.mrs",
-    path: "./ruleset/category-ads-all",
-  },
   copilot: {
     ...ruleProviderYaml,
     behavior: "classical",
@@ -229,46 +119,40 @@ const ruleProviders = {
     url: "https://mirror.ghproxy.com/https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/OpenAI/OpenAI.yaml",
     path: "./ruleset/OpenAI.yaml",
   },
-  steam: {
-    ...ruleProviderYaml,
-    behavior: "classical",
-    url: "https://mirror.ghproxy.com/https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Steam/Steam.yaml",
-    path: "./ruleset/Steam.yaml",
-  },
 };
 // 规则
 const rules = [
   //规则集
   "RULE-SET,reject,Block",
-  "RULE-SET,ads,Block",
-
+  "GEOSITE,category-ads-all,Block",
   "RULE-SET,mydomain,DIRECT",
-  "RULE-SET,applications,DIRECT",
-  "RULE-SET,private,DIRECT",
-  "RULE-SET,direct,DIRECT",
-  "RULE-SET,cncidr,DIRECT,no-resolve",
-  "RULE-SET,lancidr,DIRECT,no-resolve",
-  "RULE-SET,cn_domain,DIRECT",
+  "GEOSITE,private,DIRECT",
 
-  "RULE-SET,github,Proxy",
-  "RULE-SET,microsoft,Microsoft",
-  "RULE-SET,copilot,AIGC",
-  "RULE-SET,bard,AIGC",
-  "RULE-SET,openai,AIGC",
-  "RULE-SET,claude,AIGC",
-  "RULE-SET,gfw,Proxy",
-  "RULE-SET,youtube,Proxy",
-  "RULE-SET,proxy,Proxy",
-  "RULE-SET,geolocation-!cn,Proxy",
-  "RULE-SET,tld-not-cn,Proxy",
-  "RULE-SET,telegramcidr,Proxy,no-resolve",
-
-  "RULE-SET,telegram,Proxy",
-
-  // 其他规则
+  "GEOSITE,youtube," + proxyName,
+  "GEOSITE,google," + proxyName,
+  "GEOSITE,telegram," + proxyName,
+  "GEOSITE,twitter," + proxyName,
+  "GEOSITE,pixiv," + proxyName,
+  "GEOSITE,category-scholar-!cn," + proxyName,
+  "GEOSITE,biliintl," + proxyName,
+  "GEOSITE,github," + proxyName,
+  "GEOSITE,onedrive," + microsoftName,
+  "GEOSITE,microsoft," + microsoftName,
+  "RULE-SET,copilot," + AIName,
+  "RULE-SET,bard," + AIName,
+  "RULE-SET,openai," + AIName,
+  "RULE-SET,claude," + AIName,
+  "GEOSITE,apple-cn,DIRECT",
+  "GEOSITE,steam@cn,DIRECT",
+  "GEOSITE,category-games@cn,DIRECT",
+  "GEOSITE,geolocation-!cn," + proxyName,
+  "GEOSITE,cn,DIRECT",
+  "GEOIP,private,DIRECT,no-resolve",
+  "GEOIP,telegram," + proxyName,
+  "GEOIP,JP," + proxyName,
   "GEOIP,LAN,DIRECT",
   "GEOIP,CN,DIRECT",
-  "MATCH,Fallback",
+  "MATCH," + FallbackName,
 ];
 // 代理组通用配置
 const groupBaseOption = {
@@ -292,7 +176,7 @@ function main(config) {
   config["proxy-groups"] = [
     {
       ...groupBaseOption,
-      name: "Proxy",
+      name: proxyName,
       type: "select",
       proxies: ["Auto Select", "DIRECT", ...proxyInfo],
       "include-all": false,
@@ -311,19 +195,19 @@ function main(config) {
     },
     {
       ...groupBaseOption,
-      name: "Microsoft",
+      name: microsoftName,
       type: "select",
-      proxies: ["DIRECT", "Proxy"],
+      proxies: ["DIRECT", proxyName],
       "include-all": false,
       icon: "https://mirror.ghproxy.com/https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Microsoft.png",
     },
     {
       ...groupBaseOption,
-      name: "AIGC",
+      name: AIName,
       type: "select",
       "include-all": true,
       "exclude-filter": excludeInfo,
-      proxies: ["Proxy"],
+      proxies: [proxyName],
       filter:
         "(?i)香港|Hong Kong|HK|🇭🇰|新加坡|Singapore|🇸🇬|日本|Japan|🇯🇵|美国|USA|🇺🇸",
       icon: "https://mirror.ghproxy.com/https://raw.githubusercontent.com/Orz-3/mini/master/Color/OpenAI.png",
@@ -337,9 +221,9 @@ function main(config) {
     },
     {
       ...groupBaseOption,
-      name: "Fallback",
+      name: FallbackName,
       type: "select",
-      proxies: ["Proxy", "Auto Select", "DIRECT"],
+      proxies: [proxyName, "Auto Select", "DIRECT"],
       "include-all": false,
       icon: "https://mirror.ghproxy.com/https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Final.png",
     },
@@ -355,9 +239,9 @@ function main(config) {
   ];
 
   // 覆盖原配置中的规则
+  config["rules"] = rules;
   config["rule-providers"] = ruleProviders;
 
-  config["rules"] = rules;
   // 覆盖原配置中DNS配置
   config["dns"] = dnsConfig;
   // 域名嗅探
