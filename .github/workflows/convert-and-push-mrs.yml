@@ -1,0 +1,141 @@
+name: Greeting from Mona
+on: 
+  workflow_dispatch: # 允许手动触发
+
+jobs:
+  my-job:
+    name: My Job
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # 允许上传 Artifacts
+
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up GitHub CLI (for downloading Mihomo)
+        run: gh auth setup-git
+      
+      - name: Determine download pattern and download Mihomo (Linux AMD64)
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SELECTED_OS: linux
+          SELECTED_ARCH: amd64
+        run: |
+          # Pattern to match mihomo-linux-amd64 followed by optional version suffix (e.g., -v1.2.3)
+          DOWNLOAD_PATTERN="mihomo-${SELECTED_OS}-${SELECTED_ARCH}*.gz" 
+          
+          echo "Attempting to download assets matching: $DOWNLOAD_PATTERN"
+          
+          mkdir -p ./mihomo-downloads
+
+          # Download the latest release assets that match the pattern
+          gh release download \
+            --repo MetaCubeX/mihomo \
+            --latest \
+            --pattern "$DOWNLOAD_PATTERN" \
+            --dir ./mihomo-downloads \
+            --clobber
+          
+          echo "Downloaded files:"
+          ls -l ./mihomo-downloads/
+
+      - name: Unpack Mihomo executable (gunzip) and set permissions
+        id: unpack_mihomo
+        env:
+          SELECTED_OS: linux
+          SELECTED_ARCH: amd64
+        run: |
+          DOWNLOAD_DIR="./mihomo-downloads"
+          GZ_FILE=""
+          MIHOMO_EXECUTABLE_PATH=""
+          
+          # Find the downloaded .gz file
+          GZ_FILE=$(find "$DOWNLOAD_DIR" -maxdepth 1 -name "mihomo-${SELECTED_OS}-${SELECTED_ARCH}*.gz" -print -quit)
+          
+          if [ -z "$GZ_FILE" ]; then
+            echo "Error: Mihomo GZ file not found for ${SELECTED_OS}/${SELECTED_ARCH} in $DOWNLOAD_DIR"
+            exit 1
+          fi
+          
+          echo "Decompressing GZ file: $GZ_FILE"
+          # gunzip decompresses the file in place, removing the .gz extension
+          gunzip "$GZ_FILE"
+          
+          # After decompression, the file name will be the same but without .gz
+          # E.g., mihomo-linux-amd64-v1.18.5.gz becomes mihomo-linux-amd64-v1.18.5
+          # So, find the file that is *not* a .gz file
+          MIHOMO_EXECUTABLE_PATH=$(find "$DOWNLOAD_DIR" -maxdepth 1 -name "mihomo-${SELECTED_OS}-${SELECTED_ARCH}*" -type f -a ! -name "*.gz" -print -quit)
+          
+          if [ -z "$MIHOMO_EXECUTABLE_PATH" ]; then
+            echo "Error: Mihomo executable not found after decompression in $DOWNLOAD_DIR"
+            exit 1
+          fi
+          
+          echo "Setting execute permission for: $MIHOMO_EXECUTABLE_PATH"
+          chmod +x "$MIHOMO_EXECUTABLE_PATH"
+          
+          echo "MIHOMO executable path determined as: $MIHOMO_EXECUTABLE_PATH"
+          # Output the path for subsequent steps
+          echo "mihomo_path=$MIHOMO_EXECUTABLE_PATH" >> "$GITHUB_OUTPUT"
+
+      - name: Convert Ruleset using Mihomo
+        run: |
+          MIHOMO_BIN="${{ steps.unpack_mihomo.outputs.mihomo_path }}"
+          INPUT_FILE="${{ github.workspace }}/privateDomain.yaml" # Assumed in repo root
+          # Generate output to a temporary directory first
+          TEMP_OUTPUT_DIR="temp-mihomo-output"
+          TEMP_OUTPUT_FILE="$TEMP_OUTPUT_DIR/privateDomain.mrs"
+          
+          mkdir -p "$TEMP_OUTPUT_DIR"
+          
+          if [ ! -f "$INPUT_FILE" ]; then
+            echo "Error: Input file '$INPUT_FILE' not found in your repository's root directory."
+            echo "Please ensure 'privateDomain.yaml' exists directly in the repository's root."
+            exit 1
+          fi
+          
+          echo "Executing: $MIHOMO_BIN convert-ruleset domain yaml \"$INPUT_FILE\" \"$TEMP_OUTPUT_FILE\""
+          
+          "$MIHOMO_BIN" convert-ruleset \
+            "domain" \
+            "yaml" \
+            "$INPUT_FILE" \
+            "$TEMP_OUTPUT_FILE"
+          
+          if [ $? -ne 0 ]; then
+            echo "Mihomo conversion failed!"
+            exit 1
+          fi
+          
+          echo "Mihomo conversion completed successfully. Generated temporary file: $TEMP_OUTPUT_FILE"
+          ls -l "$TEMP_OUTPUT_DIR"
+
+          # Move the generated MRS file to the repository root for commitment
+          mv "$TEMP_OUTPUT_FILE" "${{ github.workspace }}/privateDomain.mrs"
+          echo "Moved privateDomain.mrs to repository root."
+
+      - name: Commit and Push Converted MRS file to Repository
+        run: |
+          TARGET_FILE_IN_REPO="privateDomain.mrs"
+          
+          # Configure Git user for the commit
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          
+          # Add the file to the staging area
+          git add "$TARGET_FILE_IN_REPO"
+          
+          # Check if there are actual changes to commit
+          # --porcelain provides machine-readable output. If it's empty, no changes.
+          if git status --porcelain | grep "$TARGET_FILE_IN_REPO"; then
+            echo "Changes detected for $TARGET_FILE_IN_REPO. Committing..."
+            # Commit with [skip ci] to prevent infinite workflow loops
+            git commit -m "chore: Update privateDomain.mrs [skip ci]"
+            # Push changes to the current branch
+            git push origin HEAD
+            echo "Successfully committed and pushed $TARGET_FILE_IN_REPO to repository."
+          else
+            echo "No changes detected for $TARGET_FILE_IN_REPO. Skipping commit."
+          fi
