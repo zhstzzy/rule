@@ -1,4 +1,4 @@
-name: Convert & Push Mihomo MRS to Repo Root
+name: Convert & Push Mihomo MRS to Repo Root (Fixed gh download)
 
 on:
   workflow_dispatch:
@@ -9,7 +9,6 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write # 允许上传 Artifacts 和向仓库写入
-      # pull-requests: write # 通常不需要此权限，除非你有PR相关的操作
 
     steps:
       - name: Checkout repository
@@ -18,15 +17,23 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }} 
           fetch-depth: 0 
 
-      # -- 移除或注释掉这一步 --
-      # - name: Set up GitHub CLI (for downloading Mihomo)
-      #   run: gh auth setup-git
+      - name: Get Latest Mihomo Release Tag
+        id: get_release_tag # Assign an ID to this step to access its outputs
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Ensure GH_TOKEN is available for gh CLI
+        run: |
+          # Fetch the tag name of the latest release
+          LATEST_TAG=$(gh release view --repo MetaCubeX/mihomo --latest --json tagName --jq .tagName)
+          echo "Latest Mihomo Release Tag: $LATEST_TAG"
+          # Set the tag as an output for subsequent steps
+          echo "tag=$LATEST_TAG" >> "$GITHUB_OUTPUT"
 
       - name: Determine download pattern and download Mihomo (Linux AMD64 .gz)
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }} # <-- 这个才是关键的认证方式
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
           SELECTED_OS: linux
           SELECTED_ARCH: amd64
+          MIHOMO_RELEASE_TAG: ${{ steps.get_release_tag.outputs.tag }} # Use the output from the previous step
         run: |
           DOWNLOAD_PATTERN="mihomo-${SELECTED_OS}-${SELECTED_ARCH}*.gz" 
           
@@ -34,9 +41,10 @@ jobs:
           
           mkdir -p ./mihomo-downloads
 
+          # Now, use the obtained tag name instead of --latest flag
           gh release download \
             --repo MetaCubeX/mihomo \
-            --latest \
+            "$MIHOMO_RELEASE_TAG" \ # <--- 使用标签名
             --pattern "$DOWNLOAD_PATTERN" \
             --dir ./mihomo-downloads \
             --clobber
