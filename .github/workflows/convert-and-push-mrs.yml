@@ -42,7 +42,7 @@ jobs:
           SELECTED_ARCH: amd64
           MIHOMO_RELEASE_TAG: ${{ steps.get_release_tag.outputs.tag }} # Use the output from the previous step
         run: |
-          DOWNLOAD_PATTERN="mihomo-${SELECTED_OS}-${SELECTED_ARCH}*.gz" 
+          DOWNLOAD_PATTERN="mihomo-${SELECTED_OS}-${SELECTED_ARCH}-${MIHOMO_RELEASE_TAG}.gz" 
           
           echo "Attempting to download assets matching: $DOWNLOAD_PATTERN"
           
