@@ -1,36 +1,39 @@
-name: Convert MRS
-on: 
-  workflow_dispatch: # 允许手动触发
+name: Convert & Push Mihomo MRS to Repo Root
+
+on:
+  workflow_dispatch:
+    # No inputs needed as all parameters are hardcoded for this specific conversion
 
 jobs:
-  my-job:
-    name: My Job
+  convert-and-push-ruleset:
     runs-on: ubuntu-latest
     permissions:
-      contents: write # 允许上传 Artifacts
+      contents: write # 允许上传 Artifacts 和向仓库写入
+      # pull-requests: write # 通常不需要此权限，除非你有PR相关的操作
 
-    
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }} 
+          fetch-depth: 0 
 
-      - name: Set up GitHub CLI (for downloading Mihomo)
-        run: gh auth setup-git
-      
-      - name: Determine download pattern and download Mihomo (Linux AMD64)
+      # -- 移除或注释掉这一步 --
+      # - name: Set up GitHub CLI (for downloading Mihomo)
+      #   run: gh auth setup-git
+
+      - name: Determine download pattern and download Mihomo (Linux AMD64 .gz)
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }} # <-- 这个才是关键的认证方式
           SELECTED_OS: linux
           SELECTED_ARCH: amd64
         run: |
-          # Pattern to match mihomo-linux-amd64 followed by optional version suffix (e.g., -v1.2.3)
           DOWNLOAD_PATTERN="mihomo-${SELECTED_OS}-${SELECTED_ARCH}*.gz" 
           
           echo "Attempting to download assets matching: $DOWNLOAD_PATTERN"
           
           mkdir -p ./mihomo-downloads
 
-          # Download the latest release assets that match the pattern
           gh release download \
             --repo MetaCubeX/mihomo \
             --latest \
@@ -51,7 +54,6 @@ jobs:
           GZ_FILE=""
           MIHOMO_EXECUTABLE_PATH=""
           
-          # Find the downloaded .gz file
           GZ_FILE=$(find "$DOWNLOAD_DIR" -maxdepth 1 -name "mihomo-${SELECTED_OS}-${SELECTED_ARCH}*.gz" -print -quit)
           
           if [ -z "$GZ_FILE" ]; then
@@ -60,12 +62,8 @@ jobs:
           fi
           
           echo "Decompressing GZ file: $GZ_FILE"
-          # gunzip decompresses the file in place, removing the .gz extension
           gunzip "$GZ_FILE"
           
-          # After decompression, the file name will be the same but without .gz
-          # E.g., mihomo-linux-amd64-v1.18.5.gz becomes mihomo-linux-amd64-v1.18.5
-          # So, find the file that is *not* a .gz file
           MIHOMO_EXECUTABLE_PATH=$(find "$DOWNLOAD_DIR" -maxdepth 1 -name "mihomo-${SELECTED_OS}-${SELECTED_ARCH}*" -type f -a ! -name "*.gz" -print -quit)
           
           if [ -z "$MIHOMO_EXECUTABLE_PATH" ]; then
@@ -77,14 +75,12 @@ jobs:
           chmod +x "$MIHOMO_EXECUTABLE_PATH"
           
           echo "MIHOMO executable path determined as: $MIHOMO_EXECUTABLE_PATH"
-          # Output the path for subsequent steps
           echo "mihomo_path=$MIHOMO_EXECUTABLE_PATH" >> "$GITHUB_OUTPUT"
 
       - name: Convert Ruleset using Mihomo
         run: |
           MIHOMO_BIN="${{ steps.unpack_mihomo.outputs.mihomo_path }}"
           INPUT_FILE="${{ github.workspace }}/privateDomain.yaml" # Assumed in repo root
-          # Generate output to a temporary directory first
           TEMP_OUTPUT_DIR="temp-mihomo-output"
           TEMP_OUTPUT_FILE="$TEMP_OUTPUT_DIR/privateDomain.mrs"
           
@@ -112,7 +108,6 @@ jobs:
           echo "Mihomo conversion completed successfully. Generated temporary file: $TEMP_OUTPUT_FILE"
           ls -l "$TEMP_OUTPUT_DIR"
 
-          # Move the generated MRS file to the repository root for commitment
           mv "$TEMP_OUTPUT_FILE" "${{ github.workspace }}/privateDomain.mrs"
           echo "Moved privateDomain.mrs to repository root."
 
@@ -120,20 +115,14 @@ jobs:
         run: |
           TARGET_FILE_IN_REPO="privateDomain.mrs"
           
-          # Configure Git user for the commit
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           
-          # Add the file to the staging area
           git add "$TARGET_FILE_IN_REPO"
           
-          # Check if there are actual changes to commit
-          # --porcelain provides machine-readable output. If it's empty, no changes.
           if git status --porcelain | grep "$TARGET_FILE_IN_REPO"; then
             echo "Changes detected for $TARGET_FILE_IN_REPO. Committing..."
-            # Commit with [skip ci] to prevent infinite workflow loops
             git commit -m "chore: Update privateDomain.mrs [skip ci]"
-            # Push changes to the current branch
             git push origin HEAD
             echo "Successfully committed and pushed $TARGET_FILE_IN_REPO to repository."
           else
