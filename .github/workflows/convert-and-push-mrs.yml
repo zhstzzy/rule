@@ -22,17 +22,12 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Ensure GH_TOKEN is available for gh CLI
         run: |
-          # Fetch the latest release details directly from the GitHub API using gh api
-          # Then use jq to extract the tag_name
           LATEST_TAG=$(gh api /repos/MetaCubeX/mihomo/releases/latest --jq .tag_name)
-          
           if [ -z "$LATEST_TAG" ]; then
             echo "Error: Could not retrieve latest release tag from MetaCubeX/mihomo."
             exit 1
           fi
-          
           echo "Latest Mihomo Release Tag: $LATEST_TAG"
-          # Set the tag as an output for subsequent steps
           echo "tag=$LATEST_TAG" >> "$GITHUB_OUTPUT"
 
       - name: Determine download pattern and download Mihomo (Linux AMD64 .gz)
@@ -51,10 +46,8 @@ jobs:
           # Now, use the obtained tag name for downloading specific assets
           gh release download \
             --repo MetaCubeX/mihomo \
-            "$MIHOMO_RELEASE_TAG" \ # <--- 使用从 API 获取的标签名
             --pattern "$DOWNLOAD_PATTERN" \
             --dir ./mihomo-downloads \
-            --clobber
           
           echo "Downloaded files:"
           ls -l ./mihomo-downloads/
