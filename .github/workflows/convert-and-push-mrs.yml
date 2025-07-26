@@ -1,8 +1,12 @@
-name: Convert & Push Mihomo MRS to Repo Root (Fixed gh download & latest tag)
+name: Convert & Push Mihomo MRS to Repo Root
 
 on:
   workflow_dispatch:
     # No inputs needed as all parameters are hardcoded for this specific conversion
+  push:
+    paths:
+      - 'privateDomain.yaml'
+    
 
 jobs:
   convert-and-push-ruleset:
