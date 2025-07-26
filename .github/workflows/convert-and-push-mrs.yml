@@ -1,4 +1,4 @@
-name: Convert & Push Mihomo MRS to Repo Root (Fixed gh download)
+name: Convert & Push Mihomo MRS to Repo Root (Fixed gh download & latest tag)
 
 on:
   workflow_dispatch:
@@ -17,13 +17,20 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }} 
           fetch-depth: 0 
 
-      - name: Get Latest Mihomo Release Tag
+      - name: Get Latest Mihomo Release Tag via API
         id: get_release_tag # Assign an ID to this step to access its outputs
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Ensure GH_TOKEN is available for gh CLI
         run: |
-          # Fetch the tag name of the latest release
-          LATEST_TAG=$(gh release view --repo MetaCubeX/mihomo --latest --json tagName --jq .tagName)
+          # Fetch the latest release details directly from the GitHub API using gh api
+          # Then use jq to extract the tag_name
+          LATEST_TAG=$(gh api /repos/MetaCubeX/mihomo/releases/latest --jq .tag_name)
+          
+          if [ -z "$LATEST_TAG" ]; then
+            echo "Error: Could not retrieve latest release tag from MetaCubeX/mihomo."
+            exit 1
+          fi
+          
           echo "Latest Mihomo Release Tag: $LATEST_TAG"
           # Set the tag as an output for subsequent steps
           echo "tag=$LATEST_TAG" >> "$GITHUB_OUTPUT"
@@ -41,10 +48,10 @@ jobs:
           
           mkdir -p ./mihomo-downloads
 
-          # Now, use the obtained tag name instead of --latest flag
+          # Now, use the obtained tag name for downloading specific assets
           gh release download \
             --repo MetaCubeX/mihomo \
-            "$MIHOMO_RELEASE_TAG" \ # <--- 使用标签名
+            "$MIHOMO_RELEASE_TAG" \ # <--- 使用从 API 获取的标签名
             --pattern "$DOWNLOAD_PATTERN" \
             --dir ./mihomo-downloads \
             --clobber
