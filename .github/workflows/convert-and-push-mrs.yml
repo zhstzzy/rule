@@ -1,4 +1,4 @@
-name: Greeting from Mona
+name: Convert MRS
 on: 
   workflow_dispatch: # 允许手动触发
 
