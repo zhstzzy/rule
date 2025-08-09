@@ -123,20 +123,44 @@ jobs:
           mv "$TEMP_OUTPUT_FILE" "${{ github.workspace }}/privateDomain.mrs"
           echo "Moved privateDomain.mrs to repository root."
 
-      - name: Commit and Push Converted MRS file to Repository
+      - name: Setup Target Repository
+        env:
+          TARGET_REPO_TOKEN: ${{ secrets.TARGET_REPO_TOKEN }}  # 其他仓库的访问令牌
         run: |
-          TARGET_FILE_IN_REPO="privateDomain.mrs"
+          # 配置目标仓库信息
+          TARGET_REPO_OWNER="zhstzzy"
+          TARGET_REPO_NAME="mihomo-rule"
+          TARGET_BRANCH="main"  # 目标仓库的分支名
           
+          # 克隆目标仓库
+          git clone "https://$TARGET_REPO_TOKEN@github.com/$TARGET_REPO_OWNER/$TARGET_REPO_NAME.git" target-repo
+          cd target-repo
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           
-          git add "$TARGET_FILE_IN_REPO"
+          # 切换到目标分支
+          git checkout $TARGET_BRANCH || git checkout -b $TARGET_BRANCH
+          cd ..
+
+      - name: Copy MRS to Target Repository
+        run: |
+          # 将生成的MRS文件复制到目标仓库目录
+          cp "${{ github.workspace }}/privateDomain.mrs" "target-repo/privateDomain.mrs"
+          echo "Copied MRS file to target repository directory"
+
+      - name: Commit and Push to Target Repository
+        env:
+          TARGET_REPO_TOKEN: ${{ secrets.TARGET_REPO_TOKEN }}
+        run: |
+          cd target-repo
           
-          if git status --porcelain | grep "$TARGET_FILE_IN_REPO"; then
-            echo "Changes detected for $TARGET_FILE_IN_REPO. Committing..."
-            git commit -m "chore: Update privateDomain.mrs [skip ci]"
-            git push origin HEAD
-            echo "Successfully committed and pushed $TARGET_FILE_IN_REPO to repository."
+          # 检查文件是否有变化
+          if git diff --quiet --exit-code; then
+            echo "No changes detected in target repository. Skipping commit."
           else
-            echo "No changes detected for $TARGET_FILE_IN_REPO. Skipping commit."
+            # 提交并推送到目标仓库
+            git add privateDomain.mrs
+            git commit -m "chore: Auto-update privateDomain.mrs [skip ci]"
+            git push origin HEAD:$TARGET_BRANCH
+            echo "Successfully pushed to target repository"
           fi
